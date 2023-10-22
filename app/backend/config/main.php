@@ -11,7 +11,16 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'plot' => [
+            'class' => 'backend\modules\plot\Plot',
+            // ... другие настройки модуля ...
+        ],
+        'gii' => [
+            'class' => 'yii\gii\Module',
+            'allowedIPs' => ['127.0.0.1', '::1', '192.168.1.*', 'XXX.XXX.XXX.XXX'] // adjust this to your needs
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -37,14 +46,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
+//        'urlManager' => [
+//            'enablePrettyUrl' => true,
+//            'enableStrictParsing' => true,
+//            'showScriptName' => false,
+//            'rules' => [
+//                ['class' => 'yii\rest\UrlRule', 'controller' => \backend\modules\plot\controllers\PlotController::class],
+//            ],
+//        ]
     ],
     'params' => $params,
 ];

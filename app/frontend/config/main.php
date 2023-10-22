@@ -11,6 +11,12 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'plot' => [
+            'class' => 'frontend\modules\plot\Plot',
+            // ... другие настройки модуля ...
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
