@@ -2,14 +2,12 @@
 
 namespace backend\modules\plot\controllers;
 
-use backend\modules\plot\services\CadastralDataResponseService;
 use backend\modules\plot\services\PlotService;
 use Yii;
 use yii\web\Controller;
-use backend\modules\plot\services\CadastralApiService;
 
 /**
- *
+ * PlotController
  */
 class PlotController extends Controller
 {
@@ -19,7 +17,6 @@ class PlotController extends Controller
     public function actionIndex()
     {
         $models = \backend\modules\plot\models\Plot::find()->all();
-        //var_dump($models);
         return $this->render('plot', ['models' => $models]);
     }
 

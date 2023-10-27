@@ -5,21 +5,39 @@ namespace backend\modules\plot\services;
 use backend\modules\plot\dto\PlotDto;
 use backend\modules\plot\models\Plot;
 
+/**
+ * Сервис работы с участками
+ */
 class PlotService
 {
+    /**
+     * Получить участки по кадастровым номерам
+     *
+     * @param array $cadastralNumbers
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\httpclient\Exception
+     */
     public function getPlotsByCadastralNumbers(array $cadastralNumbers): array
     {
         $cadastralApiService = new CadastralApiService(); // di не настроил
         $cadastralDataResponseService = new CadastralDataResponseService(); // di не настроил
         $plots = Plot::find()
             ->where(['cadastralNumber' => $cadastralNumbers])
-            ->andWhere(['>', 'updatedAt', date('y-m-d g:i', strtotime('-30 days'))])
             ->all();
 
         $actualPlotsNumbers = [];
+        $notActualPlots = [];
+
         /** @var Plot $plot */
         foreach ($plots as $plot) {
-            $actualPlotsNumbers[] = $plot->cadastralNumber;
+            if (strtotime($plot->updatedAt) < strtotime(date('y-m-d', strtotime('-30 days')))) {
+                $notActualPlots[] = $plot;
+            } else {
+                $actualPlotsNumbers[] = $plot->cadastralNumber;
+            }
         }
 
         // Запрашивать с api толкьо устаревшие или несуществующие учаски
@@ -28,16 +46,10 @@ class PlotService
         if ($notExistedPlots) {
             $responseData = $cadastralApiService->getData($notExistedPlots);
             $plotData = $cadastralDataResponseService->getPlotDataFromResponse($responseData);
-            $oldPlots = Plot::find()
-                ->where(['cadastralNumber' => $cadastralNumbers])
-                ->andWhere(['<=', 'updatedAt', date('y-m-d g:i', strtotime('-30 days'))])
-                ->all();
+
             $updatedPlotNumbers = [];
-            foreach ($oldPlots as $plot) {
-                if (
-                    isset($plotData[($plot->cadastralNumber)])
-                    && (strtotime($plot->updatedAt) < strtotime(date('y-m-d g:i', strtotime('-30 days'))))
-                ) {
+            foreach ($notActualPlots as $plot) {
+                if (isset($plotData[($plot->cadastralNumber)])) {
                     $plot->address = $plotData[($plot->cadastralNumber)]['address'] ?? '';
                     $plot->price = $plotData[($plot->cadastralNumber)]['price'] ?? '';
                     $plot->area = $plotData[($plot->cadastralNumber)]['area'] ?? '';
@@ -53,7 +65,6 @@ class PlotService
                     unset($responseData[$key]);
                 }
             }
-
             $plotDto = $cadastralDataResponseService->getPlotDtoFromResponse($responseData);
             $newPlots = $this->savePlot($plotDto);
         }
@@ -61,6 +72,8 @@ class PlotService
     }
 
     /**
+     * Сохранить участок в базу
+     *
      * @param PlotDto[] $plotData
      * @return array|Plot[]
      */
