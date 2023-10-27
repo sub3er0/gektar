@@ -1,5 +1,4 @@
-# yii2-docker-basic
-Nginx + PHP-FPM + MySQL docker-compose layout for yii2 basic template
+Инструкция по разворачиванию проекта
 
 1. Клонировать проект с репозитория git clone https://github.com/sub3er0/gektar.git .
 2. Установить yii2 (cd app) composer install
