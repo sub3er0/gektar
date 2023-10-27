@@ -18,6 +18,7 @@ class m231021_125938_create_plot_table extends Migration
             'address' => $this->string(),
             'price' => $this->float(),
             'area' => $this->float(),
+            'updatedAt' => $this->dateTime()
         ]);
     }
 

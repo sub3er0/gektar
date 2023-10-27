@@ -6,6 +6,10 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
+$container = new \yii\di\Container;
+
+//$container->set('backend\modules\plot\services\CadastrialApiService');
+
 return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
@@ -46,14 +50,24 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-//        'urlManager' => [
-//            'enablePrettyUrl' => true,
-//            'enableStrictParsing' => true,
-//            'showScriptName' => false,
-//            'rules' => [
-//                ['class' => 'yii\rest\UrlRule', 'controller' => \backend\modules\plot\controllers\PlotController::class],
-//            ],
-//        ]
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=db;dbname=dbname',
+            'username' => 'username',
+            'password' => 'password',
+        ],
+        'urlManager' => [
+            //'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
+            'rules' => [
+                'plot' => '<module>/plot/index',
+                'plot/getData' => '<module>/plot/getData'
+            ],
+        ],
+        'container' => [
+            'definitions' => 'backend\modules\plot\services\CadastrialApiService',
+            'class' => 'backend\modules\plot\services\CadastrialApiService'
+        ],
     ],
     'params' => $params,
 ];
