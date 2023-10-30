@@ -20,10 +20,11 @@ class PlotService
      * @throws \yii\db\StaleObjectException
      * @throws \yii\httpclient\Exception
      */
-    public function getPlotsByCadastralNumbers(array $cadastralNumbers): array
-    {
-        $cadastralApiService = new CadastralApiService(); // di не настроил
-        $cadastralDataResponseService = new CadastralDataResponseService(); // di не настроил
+    public function getPlotsByCadastralNumbers(
+        CadastralApiService $cadastralApiService,
+        CadastralDataResponseService $cadastralDataResponseService,
+        array $cadastralNumbers
+    ): array {
         $plots = Plot::find()
             ->where(['cadastralNumber' => $cadastralNumbers])
             ->all();

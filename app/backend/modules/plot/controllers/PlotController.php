@@ -2,6 +2,8 @@
 
 namespace backend\modules\plot\controllers;
 
+use backend\modules\plot\services\CadastralApiService;
+use backend\modules\plot\services\CadastralDataResponseService;
 use backend\modules\plot\services\PlotService;
 use Yii;
 use yii\web\Controller;
@@ -35,7 +37,13 @@ class PlotController extends Controller
         }
 
         if (!empty($cadastralNumbers)) {
-            $plots = $plotService->getPlotsByCadastralNumbers($cadastralNumbers);
+            $cadastralApiService = new CadastralApiService(); // di не настроил
+            $cadastralDataResponseService = new CadastralDataResponseService(); // di не настроил
+            $plots = $plotService->getPlotsByCadastralNumbers(
+                $cadastralApiService,
+                $cadastralDataResponseService,
+                $cadastralNumbers
+            );
         }
         return $this->render('plot', ['models' => $plots]);
     }
