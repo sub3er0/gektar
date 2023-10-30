@@ -7,6 +7,7 @@ use backend\modules\plot\services\CadastralDataResponseService;
 use backend\modules\plot\services\PlotService;
 use Yii;
 use yii\web\Controller;
+use backend\modules\plot\models\Plot;
 
 /**
  * PlotController
@@ -18,7 +19,7 @@ class PlotController extends Controller
      */
     public function actionIndex()
     {
-        $models = \backend\modules\plot\models\Plot::find()->all();
+        $models = Plot::find()->all();
         return $this->render('plot', ['models' => $models]);
     }
 

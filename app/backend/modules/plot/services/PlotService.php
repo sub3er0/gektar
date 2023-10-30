@@ -34,7 +34,8 @@ class PlotService
 
         /** @var Plot $plot */
         foreach ($plots as $plot) {
-            if (strtotime($plot->updatedAt) < strtotime(date('y-m-d', strtotime('-30 days')))) {
+            $hoursDiff = round((strtotime(date('Y-m-d H:i:s')) - strtotime($plot->updatedAt))/3600, 1);
+            if ($hoursDiff > 1) {
                 $notActualPlots[] = $plot;
             } else {
                 $actualPlotsNumbers[] = $plot->cadastralNumber;
