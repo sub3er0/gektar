@@ -4,7 +4,7 @@
 2. Установить yii2 (cd app) composer install
 3. docker compose up -d
 4. docker exec -it gektar_php bash Затем выполнить команду инициализации проекта php init
-5. sudo chmod -R 777 . из корня проектаy
+5. sudo chmod -R 777 . из корня проекта
 6. В файле app/common/config/main-local.php установить правильные доступы:
 ```
    'db' => [
